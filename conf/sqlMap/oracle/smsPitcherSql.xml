@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- PUSH receiver sqlMap_ORACLE -->
+<mapper namespace="smsPitchermsg">
+    <!--SMS 관련 쿼리 시작-->
+    <select id="selSmsPitcherMsg" parameterType="hashmap" resultType="kr.msp.push.pitcher.worker.sms.SmsWorkBean">
+        <![CDATA[
+        select APPID,CUID,SEQNO,TITLE,SUB_TITLE,PNSID,PSID,SMS_READ_WAIT_MINUTE,PUSH_STATUS
+        ,ERRCODE,TO_CHAR(REGDATE,'YYYYMMDDhh24miss') as REGDATE,TO_CHAR(EXPIREDATE,'YYYYMMDDhh24miss') as EXPIREDATE,TO_CHAR(SYSDATE,'YYYYMMDDhh24miss') as CHKDATE
+        from T_PUSH_SMS
+        where EXPIREDATE <= SYSDATE
+        ]]>
+    </select>
+
+    <delete id="delSmsPitcherMsg" parameterType="hashmap">
+        <![CDATA[
+        delete from T_PUSH_SMS where EXPIREDATE <= TO_DATE(#{CHKDATE}, 'YYYYMMDDhh24miss')
+        ]]>
+    </delete>
+
+    <update id="upSuccTableUpSms" parameterType="kr.msp.push.pitcher.worker.sms.SmsWorkBean">
+        <![CDATA[
+        update T_PUSH_SUCCESS set ISSMSSENT='Y' where SEQNO=#{SEQNO} and PSID=#{PSID}
+        ]]>
+    </update>
+
+    <update id="upFailTableUpSms" parameterType="kr.msp.push.pitcher.worker.sms.SmsWorkBean">
+        <![CDATA[
+        update T_PUSH_FAIL set ISSMSSENT='Y' where SEQNO=#{SEQNO} and PSID=#{PSID}
+        ]]>
+    </update>
+</mapper>

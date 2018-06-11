@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 주의 : 주키퍼를 이용하지 않는다는 셋팅은 DB-Pitcher를 한대 만 구동해야한다. 그렇치 않으면 중복 발송된다. -->
+    <zookeeper>
+        <useYN>Y</useYN>
+        <!--주키퍼가 여러대일때 쉼표로 구분 ex)211.241.199.243:2181,211.241.199.139:2181,211.241.199.217:2181-->
+        <hostPort>211.241.199.243:2181</hostPort>
+        <monitorConTimeOut>10</monitorConTimeOut>
+    </zookeeper>
+
+    <pitcher>
+        <serverID>pitcher139</serverID>
+        <push>
+            <useYN>Y</useYN>
+            <pushRequestThreadCnt>5</pushRequestThreadCnt>
+            <smsRequestThreadCnt>3</smsRequestThreadCnt>
+            <taskWorkerThreadCnt>10</taskWorkerThreadCnt>
+            <dbWatchMiliTime>1000</dbWatchMiliTime>
+            <maxQueueSize>50000</maxQueueSize>
+            <!--T_PUSH_PITCHER_MSG 테이블에 등록 된지 설정 분(default:1시간30분) 이상 지난 PUSH메세지는 발송 처리 하지 않고 지운다.-->
+            <expireSendMsgMinute>90</expireSendMsgMinute>
+            <!--발송처리 결과 DB테이블에 저장 여부. 모든 성공 실패는 로그로 남기는게 기본... Default : N 이유는 너무 많은 ROW가 쌓임.-->
+            <completWorkerCnt>3</completWorkerCnt>
+            <compleatDataDbSave>Y</compleatDataDbSave>
+        </push>
+        <sms>
+            <useYN>Y</useYN>
+            <!-- 현재 인포뱅크: INFOBANK, LGU+ : LGU -->
+            <provider>LGU</provider>
+            <threadCnt>5</threadCnt>
+            <apnsReadTimeWaitSendYN>N</apnsReadTimeWaitSendYN>
+            <dbWatchMiliTime>1000</dbWatchMiliTime>
+            <maxQueueSize>50000</maxQueueSize>
+            <fetchCnt>1000</fetchCnt>
+            <completWorkerCnt>1</completWorkerCnt>
+            <!--T_PUSH_SMS 테이블에 등록 된지 설정 분(default:1시간30분) 이상 지난 SMS메세지는 발송 처리 하지 않고 실패처리한다.-->
+            <expireSendMsgMinute>90</expireSendMsgMinute>
+            <storeID>00000</storeID>
+            <callBackNum>0700000000</callBackNum>
+            <lgu_etc>ODR_FG=2|SMS_GB=1|USED_CD=00|MSG_GB=A|EXPIRE_VAL=0|SMS_ST=0</lgu_etc>
+            <infobkSms_etc>TR_SENDSTAT=0|TR_MSGTYPE=0|TR_ETC6=SMS</infobkSms_etc>
+            <infobkMms_etc>STATUS=0|FILE_CNT=0|EXPIRETIME=43200|ETC4=2|FILE_CNT_REAL=0|TYPE=0</infobkMms_etc>
+        </sms>
+        <httpPort>7878</httpPort>
+    </pitcher>
+
+    <!-- 마지막에 반드시 '/'를 넣어주세요 -->
+    <upmc>
+        <localUrl>http://localhost:8080/upmc/</localUrl>
+        <failoverUrls></failoverUrls>
+        <!--<failoverUrls>http://211.241.199.243:8080/,http://211.241.199.215:8080/</failoverUrls>-->
+        <checkLoopTime>10</checkLoopTime>
+    </upmc>
+
+    <!-- 유라클에서 설치해 준 유라클푸시 디비정보 셋팅 -->
+    <push_db>
+        <dbtype>oracle</dbtype>
+        <dbcp_enc>N</dbcp_enc>
+        <jdbc>
+            <driverClassName>oracle.jdbc.OracleDriver</driverClassName>
+            <url>jdbc:oracle:thin:@211.241.199.243:1521:orcl</url>
+            <username>push50ee</username>
+            <password>uracle1234</password>
+            <minConnectionsPerPartition>0</minConnectionsPerPartition>
+            <maxConnectionsPerPartition>10</maxConnectionsPerPartition>
+            <idleMaxAgeInSeconds>3600</idleMaxAgeInSeconds>
+            <idleConnectionTestPeriodInMinutes>5</idleConnectionTestPeriodInMinutes>
+            <connectionTestStatement>select 1 from dual</connectionTestStatement>
+        </jdbc>
+    </push_db>
+        <!--
+        <dbtype>mysql</dbtype>
+        <dbcp_enc>N</dbcp_enc>
+        <jdbc>
+            <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+            <url>jdbc:mysql://211.241.199.215:3306/push5?characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
+            <username>root</username>
+            <password>uracle1234</password>
+            <minConnectionsPerPartition>0</minConnectionsPerPartition>
+            <maxConnectionsPerPartition>10</maxConnectionsPerPartition>
+            <idleMaxAgeInSeconds>3600</idleMaxAgeInSeconds>
+            <idleConnectionTestPeriodInMinutes>5</idleConnectionTestPeriodInMinutes>
+            <connectionTestStatement>select 1</connectionTestStatement>
+        </jdbc>
+        -->
+
+    <!-- 푸시발송하여야 할 정보를 가져올수 있는 legacy 디비정보 셋팅-->
+    <legacy_pushfetch_db>
+        <dbtype>oracle</dbtype>
+        <dbcp_enc>N</dbcp_enc>
+        <jdbc>
+            <driverClassName>oracle.jdbc.OracleDriver</driverClassName>
+            <url>jdbc:oracle:thin:@211.241.199.155:1521:UDB</url>
+            <username>pushonm</username>
+            <password>pushonm</password>
+            <minConnectionsPerPartition>0</minConnectionsPerPartition>
+            <maxConnectionsPerPartition>10</maxConnectionsPerPartition>
+            <idleMaxAgeInSeconds>3600</idleMaxAgeInSeconds>
+            <idleConnectionTestPeriodInMinutes>5</idleConnectionTestPeriodInMinutes>
+            <connectionTestStatement>select 1 from dual</connectionTestStatement>
+        </jdbc>
+        <sync_times>3,15</sync_times>
+    </legacy_pushfetch_db>
+
+    <!-- SMS 발송을 위해 사용자아아디와 핸드폰번호를 가져올수 있는 디비정보 셋팅-->
+    <legacy_hr_db>
+        <dbtype>oracle</dbtype>
+        <dbcp_enc>N</dbcp_enc>
+        <jdbc>
+            <driverClassName>oracle.jdbc.OracleDriver</driverClassName>
+            <url>jdbc:oracle:thin:@211.241.199.155:1521:UDB</url>
+            <username>pushonm</username>
+            <password>pushonm</password>
+            <minConnectionsPerPartition>0</minConnectionsPerPartition>
+            <maxConnectionsPerPartition>10</maxConnectionsPerPartition>
+            <idleMaxAgeInSeconds>3600</idleMaxAgeInSeconds>
+            <idleConnectionTestPeriodInMinutes>5</idleConnectionTestPeriodInMinutes>
+            <connectionTestStatement>select 1 from dual</connectionTestStatement>
+        </jdbc>
+        <!-- 반드시 별칭을 주어 조회되는 컬럼명이 CUID, HP이어야한다. 첫번째 컬럼은 유저아이디 두번째 컬럼은 핸드폰 번호이어야 한다-->
+        <hphone_sel_sql>select userid as CUID, HP as HP from T_LEGACY_USERINFO</hphone_sel_sql>
+        <sync_times>3,15</sync_times>
+    </legacy_hr_db>
+
+    <!-- SMS 발송을 처리해 주는 디비정보-->
+    <sms_db>
+        <dbtype>oracle</dbtype>
+        <dbcp_enc>N</dbcp_enc>
+        <jdbc>
+            <driverClassName>oracle.jdbc.OracleDriver</driverClassName>
+            <url>jdbc:oracle:thin:@211.241.199.155:1521:UDB</url>
+            <username>pushonm</username>
+            <password>pushonm</password>
+            <minConnectionsPerPartition>0</minConnectionsPerPartition>
+            <maxConnectionsPerPartition>10</maxConnectionsPerPartition>
+            <idleMaxAgeInSeconds>3600</idleMaxAgeInSeconds>
+            <idleConnectionTestPeriodInMinutes>5</idleConnectionTestPeriodInMinutes>
+            <connectionTestStatement>select 1 from dual</connectionTestStatement>
+        </jdbc>
+    </sms_db>
+
+
+    <!--
+    ################################################
+    # 모니터링을 허용할 아이피.
+    ################################################
+    -->
+    <security>
+        <using>false</using>
+        <ignore>
+            <ips>
+                211.241.199.139,211.241.199.241-243
+            </ips>
+        </ignore>
+    </security>
+</configuration>

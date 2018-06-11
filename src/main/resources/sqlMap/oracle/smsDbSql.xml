@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- PUSH receiver sqlMap_ORACLE -->
+<mapper namespace="smsDbSql">
+
+    <insert id="infobankSendSms" parameterType="hashmap">
+        <![CDATA[
+        insert into SC_TRAN(TR_NUM, TR_SENDDATE, TR_SENDSTAT, TR_MSGTYPE, TR_PHONE, TR_CALLBACK, TR_MSG, TR_NET, TR_ETC6)
+        values(SC_SEQUENCE.NEXTVAL, SYSDATE, #{TR_SENDSTAT}, #{TR_MSGTYPE}, #{TARGET}, #{CALLBACK}, #{MSG}, #{SENDER}, #{TR_ETC6})
+        ]]>
+    </insert>
+
+    <insert id="infobankSendMms" parameterType="hashmap">
+        <![CDATA[
+        insert into MMS_MSG(MSGKEY, SUBJECT, PHONE, CALLBACK, STATUS, REQDATE, MSG, FILE_CNT, EXPIRETIME, ETC4, FILE_CNT_REAL, FILE_CNT_REAL)
+        values(MMS_MSG_SEQ.NEXTVAL, #{TITLE}, #{TARGET}, #{CALLBACK}, #{STATUS}, SYSDATE, #{MSG}, #{FILE_CNT}, #{EXPIRETIME}, #{ETC4}, #{FILE_CNT_REAL}, #{FILE_CNT_REAL})
+        ]]>
+    </insert>
+
+    <insert id="lguSendSms" parameterType="hashmap">
+        <![CDATA[
+        INSERT INTO SMS_ADMINWEB(CMP_MSG_ID, CMP_USR_ID, ODR_FG, SMS_GB, USED_CD, MSG_GB, SND_DTTM, RCV_PHN_ID, CALLBACK, SND_MSG, EXPIRE_VAL, SMS_ST, WRT_DTTM)
+        VALUES(#{CMP_MSG_ID}, #{CMP_USR_ID}, #{ODR_FG}, #{SMS_GB}, #{USED_CD}, #{MSG_GB}, #{SND_DTTM}, #{RCV_PHN_ID}, #{CALLBACK}, #{SND_MSG}, #{EXPIRE_VAL}, #{SMS_ST}, #{WRT_DTTM})
+        ]]>
+    </insert>
+</mapper>

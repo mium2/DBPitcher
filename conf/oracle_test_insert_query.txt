@@ -1,0 +1,59 @@
+/// 오라클
+
+DECLARE
+       v_loop_cnt number := 10;
+       v_cnt number := 1;
+     BEGIN
+
+       DBMS_OUTPUT.ENABLE;
+
+       WHILE v_cnt <=v_loop_cnt LOOP
+
+	insert into T_PUSH_PITCHER_MSG(PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,GROUPSEQ,CUID,REGDATE
+        ,PROCESS_FLAG,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT)
+        values(SEQ_T_PUSH_PITCHER_MSG.NEXTVAL,'com.upns.push.test',concat('HI-',v_cnt),'alert.aif','0','3','','admin','PRIVATE','','S','N','',concat('P',LPAD(v_cnt,9,'0')),SYSDATE
+        ,'N','0','0','2','','N','0','Y','');
+
+
+           v_cnt := v_cnt+1;
+
+           EXIT WHEN v_cnt > v_loop_cnt;
+
+       END LOOP;
+
+    END;
+
+//SMS 발송 테스트
+DECLARE
+       v_loop_cnt number := 10;
+       v_cnt number := 1;
+     BEGIN
+
+       DBMS_OUTPUT.ENABLE;
+       WHILE v_cnt <=v_loop_cnt LOOPㅓㅗㅗㅗ
+	    insert into T_PUSH_SMS(APPID,CUID,SEQNO,TITLE,SUB_TITLE,PNSID,PSID,SMS_READ_WAIT_MINUTE,PUSH_STATUS,ERRCODE,REGDATE,EXPIREDATE)
+        values('com.uracle.push.test',CONCAT('test',v_cnt),v_cnt,'SMS발송테스트','','UPNS','pnsid1234567890','0','F','500',SYSDATE,SYSDATE);
+
+
+           v_cnt := v_cnt+1;
+
+           EXIT WHEN v_cnt > v_loop_cnt;
+
+       END LOOP;
+
+    END;
+
+    SYSDATE-INTERVAL '90' MINUTE
+
+ 사내 215번 서버 단껀 push/sms 등록 쿼리
+
+// PUSH 발송 등록
+	insert into T_PUSH_PITCHER_MSG(PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,GROUPSEQ,CUID,REGDATE
+        ,PROCESS_FLAG,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT)
+        values(SEQ_T_PUSH_PITCHER_MSG.NEXTVAL,'com.uracle.push.test','DBpitcher 이용 푸시테스트 발송','alert.aif','0','3','','admin','PRIVATE','','E','Y','','jinwoo',SYSDATE
+        ,'N','0','0','2','','N','0','Y','');
+
+// SMS 발송등록
+ insert into T_PUSH_SMS(APPID,CUID,SEQNO,TITLE,SUB_TITLE,PNSID,PSID,SMS_READ_WAIT_MINUTE,PUSH_STATUS,ERRCODE,REGDATE,EXPIREDATE)
+         values('com.uracle.push.test',CONCAT('test',v_cnt),v_cnt,'SMS발송테스트','','UPNS','pnsid1234567890','0','F','500',SYSDATE,SYSDATE);
+

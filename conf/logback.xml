@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <appender name="FILELOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level [%class{0}.class] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PUSHSENTAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/push/sent.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PUSHFAILAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/push/fail.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SmsSentAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/sms/sent.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SmsFetchAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/sms/fetch.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SmsNoUpAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/sms/noup.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SmsFailAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/sms/fail.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%class{36}] - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <logger name="PUSHSENTLOG" level="INFO">
+        <appender-ref ref="PUSHSENTAPPENDER" />
+    </logger>
+
+    <logger name="PUSHFAILLOG" level="INFO">
+        <appender-ref ref="PUSHFAILAPPENDER" />
+    </logger>
+
+    <logger name="SMS_SENT_LOG" level="INFO">
+        <appender-ref ref="SmsSentAPPENDER" />
+    </logger>
+
+    <logger name="SMS_FETCH_LOG" level="INFO">
+        <appender-ref ref="SmsFetchAPPENDER" />
+    </logger>
+
+    <logger name="SMS_NO_UP_LOG" level="INFO">
+        <appender-ref ref="SmsNoUpAPPENDER" />
+    </logger>
+
+    <logger name="SMS_FAIL_LOG" level="INFO">
+        <appender-ref ref="SmsFailAPPENDER" />
+    </logger>
+    <!--SQL print log start-->
+    <!--
+    <logger name="pushPitchermsg" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="smsPitchermsg" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="legacyDbSql" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    -->
+    <logger name="smsDbSql" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+
+    <!--SQL print log end-->
+    <logger name="kr.msp.push.pitcher" level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </logger>
+<!--
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+-->
+
+</configuration>
+        

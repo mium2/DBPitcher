@@ -1,0 +1,18 @@
+// MySQL
+drop procedure inDbPitcherTask;
+
+
+CREATE PROCEDURE inDbPitcherTask(IN loopCnt INT)
+BEGIN
+  DECLARE v_cnt INT DEFAULT 1;
+
+  WHILE v_cnt <= loopCnt DO
+    insert into T_PUSH_PITCHER_MSG(APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,GROUPSEQ,CUID,REGDATE
+    ,PROCESS_FLAG,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT)
+    values('com.upns.push.test',concat('HI-',v_cnt),'alert.aif','0','3','','admin','PRIVATE','','E','N','',concat('P',LPAD(v_cnt,9,'0')),SYSDATE()
+    ,'N','0','0','2','','N','0','Y','');
+    SET v_cnt = v_cnt + 1;
+  END WHILE;
+END;
+
+call inDbPitcherTask(2);

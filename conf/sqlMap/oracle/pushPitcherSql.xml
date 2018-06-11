@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- ORACLE  주의 사항 : 오라클의 selPitcherMsg2000 쿼리의 REGDATE는 초까지의 TimeStamp 값이 등록된다. 다른 DB에 적용 할 때 반드시 확인 해야 한다.-->
+<mapper namespace="pushPitchermsg">
+    <insert id="inPitcherMsg" parameterType="kr.msp.push.pitcher.worker.push.PushWorkBean">
+        <selectKey keyProperty="PITCHER_SEQNO" resultType="long" order="BEFORE">
+            SELECT SEQ_T_PUSH_PITCHER_MSG.NEXTVAL  FROM DUAL
+        </selectKey>
+        <![CDATA[
+        insert into T_PUSH_PITCHER_MSG(PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,GROUPSEQ,CUID,REGDATE
+        ,PROCESS_FLAG,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT)
+        values(#{PITCHER_SEQNO},#{APP_ID},#{MESSAGE},#{SOUNDFILE},#{BADGENO},#{PRIORITY},#{EXT},#{SENDERCODE},#{SERVICECODE},#{RESERVEDATE},#{TYPE},#{DB_IN},#{GROUPSEQ},#{CUID},SYSDATE
+        ,#{PROCESS_FLAG},#{SPLIT_MSG_CNT},#{DELAY_SECOND},'2',#{SUB_TITLE},#{PUSH_FAIL_SMS_SEND},#{SMS_READ_WAIT_MINUTE},#{DOZ_GCM_SEND},#{SEND_TIME_LIMIT})
+        ]]>
+    </insert>
+
+    <select id="selPitcherMsg2000" parameterType="long" resultType="kr.msp.push.pitcher.worker.push.PushWorkBean">
+        <![CDATA[
+        select * from
+        (select PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,ATTACHFILE,GROUPSEQ,CUID,TO_CHAR(REGDATE,'YYYYMMDDhh24miss') AS REGDATE,PROCESS_FLAG
+        ,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT
+        from T_PUSH_PITCHER_MSG where PITCHER_SEQNO>#{PITCHER_SEQNO} order by PITCHER_SEQNO asc)
+        where ROWNUM<=2000
+        ]]>
+    </select>
+
+    <select id="selAllPitcherMsg" parameterType="hashmap" resultType="kr.msp.push.pitcher.worker.push.PushWorkBean">
+        <![CDATA[
+        select PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,ATTACHFILE,GROUPSEQ,CUID,TO_CHAR(REGDATE,'YYYYMMDDhh24miss') AS REGDATE,PROCESS_FLAG
+        ,SPLIT_MSG_CNT,DELAY_SECOND,RESERVETYPE,SUB_TITLE,PUSH_FAIL_SMS_SEND,SMS_READ_WAIT_MINUTE,DOZ_GCM_SEND,SEND_TIME_LIMIT
+        from T_PUSH_PITCHER_MSG where REGDATE > SYSDATE-INTERVAL '${expireMin}' MINUTE order by PITCHER_SEQNO asc
+        ]]>
+    </select>
+
+    <insert id="inPitcherCompletedMsg" parameterType="kr.msp.push.pitcher.worker.push.PushWorkBean">
+        <![CDATA[
+        insert into T_PUSH_PITCHER_COMPLETED_MSG(PITCHER_SEQNO,APP_ID,MESSAGE,SOUNDFILE,BADGENO,PRIORITY,EXT,SENDERCODE,SERVICECODE,RESERVEDATE,TYPE,DB_IN,GROUPSEQ,CUID,REGDATE,RESULT_CODE,RESULT_MSG)
+        values(#{PITCHER_SEQNO},#{APP_ID},#{MESSAGE},#{SOUNDFILE},#{BADGENO},#{PRIORITY},#{EXT},#{SENDERCODE},#{SERVICECODE},#{RESERVEDATE},#{TYPE},#{DB_IN},#{GROUPSEQ},#{CUID},SYSDATE,#{RESULT_CODE},#{RESULT_MSG})
+        ]]>
+    </insert>
+
+    <delete id="delPitcherMsg" parameterType="kr.msp.push.pitcher.worker.push.PushWorkBean">
+      delete from T_PUSH_PITCHER_MSG where PITCHER_SEQNO=#{PITCHER_SEQNO}
+    </delete>
+
+    <select id="healthCheck" parameterType="hashmap" resultType="hashmap">
+        <![CDATA[
+        ${healthChkQuery}
+        ]]>
+    </select>
+
+    <delete id="oldDelPitcherMsg" parameterType="hashmap">
+        <![CDATA[
+        delete from T_PUSH_PITCHER_MSG where REGDATE < SYSDATE-INTERVAL '${expireMin}' MINUTE
+        ]]>
+    </delete>
+</mapper>
