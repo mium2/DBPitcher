@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -49,10 +50,11 @@ public class CustomApplicationConfig extends ApplicationConfig{
     }
 
     @Bean
-    public SqlSessionFactory legacyPushSqlSessionFactory(DataSource legacyPushDataSource) throws Exception {
+    public SqlSessionFactory legacyPushSqlSessionFactory(DataSource legacyPushDataSource, ApplicationContext applicationContext) throws Exception {
         logger.info("###[Push Fetch LEGCY DB] sqlSessionFactory start");
-        String mapperSrc= "classpath:sqlMap/"+ LoadConfig.getProperty(LoadConfig.DBTYPE)+"/*.xml";
+        String mapperSrc= "classpath:sqlMap/"+ LoadConfig.getProperty(LoadConfig.LEGACY_PUSH_DBTYPE)+"/*.xml";
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setConfigLocation(applicationContext.getResource("classpath:sqlMap/configuration.xml"));
         bean.setDataSource(legacyPushDataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperSrc));
         logger.info("###[Push Fetch LEGCY DB] sqlSessionFactory completed");
@@ -61,8 +63,8 @@ public class CustomApplicationConfig extends ApplicationConfig{
 
     @Bean
     @Qualifier("legacyPushSessionTemplate")
-    public SqlSessionTemplate legacyPushSqlSession(DataSource legacyPushDataSource) throws Exception {
-        return new SqlSessionTemplate(legacyPushSqlSessionFactory(legacyPushDataSource));
+    public SqlSessionTemplate legacyPushSqlSession(SqlSessionFactory legacyPushSqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(legacyPushSqlSessionFactory);
     }
     // legacy DB마침
 }

@@ -29,6 +29,12 @@
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <repository>
+            <id>snapshots</id>
+            <url>http://http://211.241.199.217:8080/nexus/content/repositories/snapshots</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
             <id>thirdparty</id>
             <url>http://211.241.199.217:8080/nexus/content/repositories/thirdparty</url>
             <releases><enabled>true</enabled></releases>
@@ -157,7 +163,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>kr.msp.push.pitcher.DBPitcherMain</mainClass>
+                            <mainClass>kr.msp.push.pitcher.custom.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -186,7 +192,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>kr.msp.push.pitcher.DBPitcherMain</mainClass>
+                            <mainClass>kr.msp.push.pitcher.custom.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

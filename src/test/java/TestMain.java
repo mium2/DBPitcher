@@ -74,18 +74,41 @@ public class TestMain implements Watcher, Closeable {
         }
     }
 
+    private void workMgr(){
+        String ksmd = "bioset";
+        String kcompactd = "yyyyMMddHHmmss";
+        SimpleDateFormat sd = new SimpleDateFormat("yyyymmdd");
+
+        System.out.println("kthreadd");
+        String url = "http://211.241.199.243:8080";
+        String url2 = url.substring(url.length()-1);
+        System.out.println("### url2 : "+ url2);
+
+        String chkTime = "20029311";
+
+        ZookeeperTestClient zookeeperTestClient = new ZookeeperTestClient();
+
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        JoranConfigurator joranConfigurator = new JoranConfigurator();
+        joranConfigurator.setContext(context);
+        context.reset();
+
+        ksmd = "ata_sff";
+        kcompactd = "md";
+
+
+
+    }
+
     private void timeCheck() throws Exception{
         String chkTime = "20180329121300";
         SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = dt.parse(chkTime);
-
         System.out.println(date.toString());
 
         Date curdate = new Date(System.currentTimeMillis());
         System.out.println(curdate.toString());
-
         System.out.println((curdate.getTime()-date.getTime())/1000);
-
     }
 
     private void timeCheck2(){
@@ -136,10 +159,10 @@ public class TestMain implements Watcher, Closeable {
                     logger.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     // 주키퍼와 연결이 끊어졌다는 이벤트를 받았을 때 어떻게 처리 해야 할까? 네트웍 문제는 배제하고 어플리케이션 셧다운 개념으로 만 접근 하는게 좋을 듯 하다.
                     // 즉, 통신이 끊긴 이유를 주키퍼가 죽었다고 처리할 경우 : 주키퍼 없이 보내는 로직으로 변경
-                    //TODO : 주키퍼와 연결이 끊겼을 경우 자신의 UPMC말고 다른 UPMC와 통신이 되는지 확인 후 된다 면 주키퍼가 죽은 것으로 판단하고 마스터일 경우 마스터 roll 수행하고 주키퍼를 사용하지 않는 worker 구동.
-                    //TODO : 경우의 수 : 1.주키퍼가 문제인 경우. 2.DB Pitcher 네트웍이 문제인 경우.
-                    //TODO : 이 두가지의 경우 중 1일 경우는 마스터일 경우 주키퍼 사용하지 않는걸로 바꾸면 될 것 같음.
-                    //TODO : 주키퍼 미사용으로 처리방법 : 마스터 roll일 경우는 LoadConfig.ZOOKEEPER_USEYN을 N롤 셋팅후 PushWorkerManager에 있는 PuDBFetcherThread를 살리고 ZooKeeperTaskProductor stop PushWorkerThread start 하면 될것 같음.
+                    // TODO : 주키퍼와 연결이 끊겼을 경우 자신의 UPMC말고 다른 UPMC와 통신이 되는지 확인 후 된다 면 주키퍼가 죽은 것으로 판단하고 마스터일 경우 마스터 roll 수행하고 주키퍼를 사용하지 않는 worker 구동.
+                    // TODO : 경우의 수 : 1.주키퍼가 문제인 경우. 2.DB Pitcher 네트웍이 문제인 경우.
+                    // TODO : 이 두가지의 경우 중 1일 경우는 마스터일 경우 주키퍼 사용하지 않는걸로 바꾸면 될 것 같음.
+                    // TODO : 주키퍼 미사용으로 처리방법 : 마스터 roll일 경우는 LoadConfig.ZOOKEEPER_USEYN을 N롤 셋팅후 PushWorkerManager에 있는 PuDBFetcherThread를 살리고 ZooKeeperTaskProductor stop PushWorkerThread start 하면 될것 같음.
 
                     try {
                         logger.debug("### TcpAliveConManager.getInstance().getAliveHostNameList().size():"+ TcpAliveConManager.getInstance().getAliveHostNameList().size());
