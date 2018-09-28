@@ -25,7 +25,7 @@
             <compleatDataDbSave>Y</compleatDataDbSave>
         </push>
         <sms>
-            <useYN>Y</useYN>
+            <useYN>N</useYN>
             <!-- 현재 인포뱅크: INFOBANK, LGU+ : LGU -->
             <provider>LGU</provider>
             <threadCnt>5</threadCnt>
